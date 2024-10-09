@@ -1,8 +1,5 @@
-# React + Vite
+# react-pokedex
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Create a website using the React JavaScript Library and any PokemonAPI to create a PokeDex.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The PokeDex should display the information of any Pokemon from your Selected Region. The Regions for the PokeDex can be Hoenn, Johto, Kanto, and etc. The PokeDex should also get data from your chosen PokemonAPI. All of the data should not be hard-coded or done manually.
