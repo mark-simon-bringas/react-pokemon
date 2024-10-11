@@ -10,36 +10,16 @@ export default function PokeDex() {
     const [activePokeRegion, setActivePokeRegion] = useState(null);
     const API_URL = 'https://pokeapi.co/api/v2';
     const regions = {
-        all: { 
-            name: "all", idStart: 1, idEnd: 1025
-        },
-        kanto: { 
-            name: "kanto", idStart: 1, idEnd: 151 
-        },
-        johto: { 
-            name: "johto", idStart: 152, idEnd: 251 
-        },
-        hoenn: { 
-            name: "hoenn", idStart: 252, idEnd: 386 
-        },
-        sinnoh: { 
-            name: "sinnoh", idStart: 387, idEnd: 493 
-        },
-        unova: { 
-            name: "unova", idStart: 494, idEnd: 649 
-        },
-        kalos: { 
-            name: "kalos", idStart: 650, idEnd: 721 
-        },
-        alola: { 
-            name: "alola", idStart: 722, idEnd: 809 
-        },
-        galar: { 
-            name: "galar", idStart: 810, idEnd: 905 
-        },
-        paldea: {
-            name: "paldea", idStart: 906, idEnd: 1025
-        }
+        all:    {name: "all", idStart: 1, idEnd: 1025},
+        kanto:  {name: "kanto", idStart: 1, idEnd: 151 },
+        johto:  {name: "johto", idStart: 152, idEnd: 251 },
+        hoenn:  {name: "hoenn", idStart: 252, idEnd: 386 },
+        sinnoh: {name: "sinnoh", idStart: 387, idEnd: 493 },
+        unova:  {name: "unova", idStart: 494, idEnd: 649 },
+        kalos:  {name: "kalos", idStart: 650, idEnd: 721 },
+        alola:  {name: "alola", idStart: 722, idEnd: 809 },
+        galar:  {name: "galar", idStart: 810, idEnd: 905 },
+        paldea: {name: "paldea", idStart: 906, idEnd: 1025}
     };
 
     useEffect(() => {
@@ -47,7 +27,7 @@ export default function PokeDex() {
             try {
                 const response = await axios.get(`${API_URL}/pokemon?limit=100000`);
                 setPokemonList(response.data.results);
-                setFilteredPokemonList(response.data.results); // Initialize filtered list
+                setFilteredPokemonList(response.data.results);
             } catch (err) {
                 console.error("ERROR: Error in fetching Pokémon list:", err);
             }
@@ -142,7 +122,7 @@ export default function PokeDex() {
     };
 
     return (
-        <div>
+        <>
             <Header 
                 input={handleInputChange} 
                 search={handleSearch}
@@ -172,9 +152,9 @@ export default function PokeDex() {
                         })
                     ) : (
                         <p>No Pokémon found</p>
-                    )}
+                    )};
                 </div>
-            )}
-        </div>
+            )};
+        </>
     );
 }
