@@ -25,7 +25,7 @@ export default function PokeDex() {
     useEffect(() => {
         const fetchAllPokemon = async () => {
             try {
-                const response = await axios.get(`${API_URL}/pokemon?limit=100000`);
+                const response = await axios.get(`${API_URL}/pokemon?limit=1025`);
                 setPokemonList(response.data.results);
                 setFilteredPokemonList(response.data.results);
             } catch (err) {
