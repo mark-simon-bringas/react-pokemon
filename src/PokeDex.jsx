@@ -1,4 +1,3 @@
-/* eslint-disable no-control-regex */
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Header from "./Header";
@@ -75,7 +74,19 @@ export default function PokeDex() {
     };
 
     const handleInputChange = (e) => {
-        setPokemon(e.target.value.toLowerCase());
+        const searchTerm = e.target.value.toLowerCase();
+        setPokemon(searchTerm);
+
+        const isNumber = !isNaN(searchTerm) && searchTerm.trim() !== '';
+        const filteredList = pokemonList.filter((pokemon, index) => {
+            const id = (index + 1).toString();
+            if (isNumber) {
+                return id.startsWith(searchTerm);
+            } else {
+                return pokemon.name.startsWith(searchTerm);
+            }
+        });
+        setFilteredPokemonList(filteredList);
     };
 
     const handleSearch = async () => {
@@ -145,23 +156,25 @@ export default function PokeDex() {
                     <img src={pokeData.sprites.front_default} alt={pokeData.name} />
                     <p>Height: {pokeData.height}</p>
                     <p>Weight: {pokeData.weight}</p>
-                    <p>Type: {pokeData.types.map(type => type.type.name).join(', ')}</p>
+                    <p>Type: {pokeData.types.map(t => t.type.name).join(', ')}</p>
                     <p>Description: {pokeData.description}</p>
                 </div>
             ) : (
                 <div className="pokemon-grid">
-                    {
+                    {filteredPokemonList.length > 0 ? (
                         filteredPokemonList.map((pokemon, index) => {
                             const regionId = pokemon.url.split('/')[6];
                             return (
                                 <div className="pokemon-card" key={index} onClick={() => handlePokeCard(pokemon.name)}>
-                                    <p>{`#${regionId}`}</p>
+                                    <p className="id-number">{`#${regionId}`}</p>
                                     <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${regionId}.png`} alt={pokemon.name} />
-                                    <span>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</span>
+                                    <span className="pokemon-name">{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</span>
                                 </div>
-                            )
+                            );
                         })
-                    }
+                    ) : (
+                        <p>No Pokémon found</p>
+                    )}
                 </div>
             )}
         </div>
