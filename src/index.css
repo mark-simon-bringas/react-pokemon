@@ -33,6 +33,11 @@ header {
   button {
     padding: 5px 10px;
   }
+
+  .filter-dropdown {
+    margin-left: 10px;
+    padding: 5px 10px;
+  }
 }
 
 .pokemon-grid {
@@ -48,6 +53,10 @@ header {
   padding: 16px;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.248);
+
+  p {
+    margin: 0;
+  }
 
   img {
     max-width: 100%;

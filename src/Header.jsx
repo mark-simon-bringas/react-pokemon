@@ -1,4 +1,6 @@
-export default function Header({ input, search }) {
+import Filters from "./Filters";
+
+export default function Header({ input, search, region }) {
     return (
         <>
             <header>
@@ -6,6 +8,7 @@ export default function Header({ input, search }) {
                 <div className="search-bar">
                     <input type="text" onChange={input} placeholder="Search Pokemon" />
                     <button onClick={search}>Search</button>
+                    <Filters onRegionChange={region} />
                 </div>
             </header>  
         </>
