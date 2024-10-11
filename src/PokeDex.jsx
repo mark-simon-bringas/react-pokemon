@@ -7,6 +7,7 @@ export default function PokeDex() {
     const [pokeData, setPokeData] = useState(null);
     const [pokemonList, setPokemonList] = useState([]);
     const [filteredPokemonList, setFilteredPokemonList] = useState([]);
+    const [activePokeRegion, setActivePokeRegion] = useState(null);
     const API_URL = 'https://pokeapi.co/api/v2';
     const regions = {
         all: { 
@@ -73,20 +74,24 @@ export default function PokeDex() {
         }
     };
 
-    const handleInputChange = (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        setPokemon(searchTerm);
-
+    const handleFilters = (searchTerm, region) => {
         const isNumber = !isNaN(searchTerm) && searchTerm.trim() !== '';
         const filteredList = pokemonList.filter((pokemon, index) => {
             const id = (index + 1).toString();
+            const inRegion = !region || (id >= region.idStart && id <= region.idEnd);
             if (isNumber) {
-                return id.startsWith(searchTerm);
+                return inRegion && id.toString().startsWith(searchTerm);
             } else {
-                return pokemon.name.startsWith(searchTerm);
+                return inRegion && pokemon.name.startsWith(searchTerm);
             }
         });
         setFilteredPokemonList(filteredList);
+    }
+
+    const handleInputChange = (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        setPokemon(searchTerm);
+        handleFilters(searchTerm, activePokeRegion);
     };
 
     const handleSearch = async () => {
@@ -113,15 +118,8 @@ export default function PokeDex() {
     
     const handleRegionChange = async (regionName) => {
         const region = regions[regionName.toLowerCase()];
-        if (!region) {
-            setFilteredPokemonList(pokemonList);
-            return;
-        }
-        const filteredList = pokemonList.filter((pokemon, index) => {
-            const id = index + 1;
-            return (id >= region.idStart) && (id <= region.idEnd);
-        });
-        setFilteredPokemonList(filteredList)
+        setActivePokeRegion(region);
+        handleFilters(pokemon, region);
     };
     
     const handlePokeCard = async (pokemon) => {

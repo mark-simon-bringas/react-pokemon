@@ -9,7 +9,10 @@ export default function Filters({ onRegionChange }) {
         const fetchRegions = async () => {
             try {
                 const response = await axios.get(`${API_URL}/region`)
-                setRegions(response.data.results)
+                const discardHisui = response.data.results.filter(
+                    region => region.name.toLowerCase() !== 'hisui'
+                )
+                setRegions(discardHisui)
             } catch (err) {
                 console.error("ERROR: Error in fetching regions:", err)
             }
