@@ -1,3 +1,4 @@
+/* eslint-disable no-control-regex */
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Header from "./Header";
@@ -98,7 +99,7 @@ export default function PokeDex() {
             }
         }
     };
-
+    
     const handleRegionChange = async (regionName) => {
         const region = regions[regionName.toLowerCase()];
         if (!region) {
@@ -110,6 +111,25 @@ export default function PokeDex() {
             return (id >= region.idStart) && (id <= region.idEnd);
         });
         setFilteredPokemonList(filteredList)
+    };
+    
+    const handlePokeCard = async (pokemon) => {
+        const data = await getPokeData(pokemon);
+        if (data) {
+            const pokeDesc = await getPokeDesc(data.id);
+            if (pokeDesc) {
+                const englishDesc = pokeDesc.flavor_text_entries.find(entry => entry.language.name === 'en');
+                data.description = englishDesc
+                    ? englishDesc.flavor_text
+                        .replace(/&#\d+;/g, '')
+                        .replace(/[^\w\s,.!?'-]/g, '')
+                        .replace(/\n/g, ' ')
+                        .replace(/\u000C/g, ' ')
+                        .trim()
+                    : "Description not found.";
+                setPokeData(data);
+            }
+        }
     };
 
     return (
@@ -134,7 +154,7 @@ export default function PokeDex() {
                         filteredPokemonList.map((pokemon, index) => {
                             const regionId = pokemon.url.split('/')[6];
                             return (
-                                <div className="pokemon-card" key={index}>
+                                <div className="pokemon-card" key={index} onClick={() => handlePokeCard(pokemon.name)}>
                                     <p>{`#${regionId}`}</p>
                                     <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${regionId}.png`} alt={pokemon.name} />
                                     <span>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</span>

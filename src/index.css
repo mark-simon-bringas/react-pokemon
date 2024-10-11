@@ -53,6 +53,7 @@ header {
   padding: 16px;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.248);
+  cursor: pointer;
 
   p {
     margin: 0;
