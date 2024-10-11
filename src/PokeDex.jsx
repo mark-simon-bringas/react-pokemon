@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import axios from 'axios'
+import Header from "./Header"
 
 export default function PokeDex() {
     const [pokemon, setPokemon] = useState('')
@@ -10,19 +11,15 @@ export default function PokeDex() {
     useEffect(() => {
         const fetchAllPokemon = async () => {
             try {
-                const response = await axios.get(`${API_URL}/pokemon?limit=100000`); // Fetching first 151 Pokémon
-                setPokemonList(response.data.results);
+                const response = await axios.get(`${API_URL}/pokemon?limit=100000`)
+                setPokemonList(response.data.results)
             } catch (err) {
-                console.error("ERROR: Error in fetching Pokémon list:", err);
+                console.error("ERROR: Error in fetching Pokémon list:", err)
             }
         }
-        fetchAllPokemon();
+        fetchAllPokemon()
     }, [])
     
-    const handleInputChange = (e) => {
-        setPokemon(e.target.value.toLowerCase());
-    }
-
     const getPokeData = async (pokemon) => {
         try {
             const response = await axios.get(`${API_URL}/pokemon/${pokemon}`)
@@ -32,19 +29,46 @@ export default function PokeDex() {
             console.error("ERROR: Error in fetching data:", err)
         }
     }
+    
+    const getPokeDesc = async (id) => {
+        try {
+            const response = await axios.get(`${API_URL}/pokemon-species/${id}`);
+            return response.data
+        } catch (err) {
+            console.error("ERROR: Error in fetching description:", err)
+            return
+        }
+    }
 
+    const handleInputChange = (e) => {
+        setPokemon(e.target.value.toLowerCase())
+    }
+    
     const handleSearch = async () => {
         if (!pokemon.trim()) {
-            return;
+            return
         }
-        const data = await getPokeData(pokemon);
-        setPokeData(data);
+        const data = await getPokeData(pokemon)
+        if (data) {
+            const pokeDesc = await getPokeDesc(data.id)
+            if (pokeDesc) {
+                const englishDesc = pokeDesc.flavor_text_entries.find(entry => entry.language.name === 'en')
+
+                data.description = englishDesc ? englishDesc.flavor_text
+                    .replace(/&#\d+;/g, '')
+                    .replace(/[^\w\s,.!?'-]/g, '')
+                    .replace(/\n/g, ' ')
+                    .replace(/\u000C/g, ' ')
+                    .trim()
+                : "Description not found."
+                setPokeData(data)
+            }
+        }
     }
 
     return (
         <div>
-            <input type="text" onChange={handleInputChange} placeholder="Search Pokemon" />
-            <button onClick={handleSearch}>Search</button>
+            <Header input={handleInputChange} search={handleSearch} />
             {pokeData ? (
                 <div>
                     <h2>{pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1)}</h2>
@@ -52,9 +76,10 @@ export default function PokeDex() {
                     <p>Height: {pokeData.height}</p>
                     <p>Weight: {pokeData.weight}</p>
                     <p>Type: {pokeData.types.map(type => type.type.name).join(', ')}</p>
+                    <p>Description: {pokeData.description}</p>
                 </div>
             ) : (
-                <div>
+                <div className="pokemon-grid">
                     {
                         pokemonList.map((pokemon, index) => (
                             <div className="pokemon-card" key={index}>
