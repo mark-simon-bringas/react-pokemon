@@ -24,6 +24,7 @@ header {
     padding: 10px 0;
     color: black;
     text-decoration: none;
+    cursor: pointer;
   }
 
   input {
@@ -34,11 +35,27 @@ header {
   
   button {
     padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .search-bar, .filter-dropdown {
+    display: flex;
+    align-items: center;
   }
 
   .filter-dropdown {
     margin-left: 10px;
+    font-weight: 500;
+  }
+
+  .filter-dropdown p {
+    cursor: default;
+  }
+
+  .filter-dropdown select {
+    margin-left: 5px;
     padding: 5px 10px;
+    cursor: pointer;
   }
 }
 
@@ -72,4 +89,9 @@ header {
     font-size: 16px;
     font-weight: bold;
   }
+}
+
+/* parang magmukhang pine-pet mo ung pokemon */
+img.pokemon-sprite {
+  cursor: grab;
 }

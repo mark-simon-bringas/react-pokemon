@@ -124,7 +124,12 @@ export default function PokeDetails() {
                         }
                     </h2>
                     <p className="pokemon-species">{pokeData.species}</p>
-                    <img src={pokeData.sprites.front_default} alt={pokeData.name} className="pokemon-sprite" />
+                    <img 
+                        src={pokeData.sprites.front_default} 
+                        alt={pokeData.name} 
+                        title={pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1)}
+                        className="pokemon-sprite" 
+                    />
                     <p className="pokemon-">Description: {pokeData.description}</p>
                     <p className="pokemon-height">Height: {pokeData.height}</p>
                     <p className="pokemon-weight">Weight: {pokeData.weight}</p>

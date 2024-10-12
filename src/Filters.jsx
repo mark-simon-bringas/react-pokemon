@@ -21,15 +21,20 @@ export default function Filters({ onRegionChange }) {
     }, []);
 
     return (
-        <select onChange={(e) => onRegionChange(e.target.value)} className="filter-dropdown">
-            <option>All Regions</option>
-            {
-                regions.map((region) => (
-                    <option key={region.name} value={region.name}>
-                        {region.name.charAt(0).toUpperCase() + region.name.slice(1)}
-                    </option>
-                ))
-            };
-        </select>
+        <>
+            <div className="filter-dropdown">
+                <p>Filter by Region: </p>
+                <select onChange={(e) => onRegionChange(e.target.value)}>
+                    <option title="All Regions">All Regions</option>
+                    {
+                        regions.map((region) => (
+                            <option key={region.name} value={region.name} title={region.name.charAt(0).toUpperCase() + region.name.slice(1)}>
+                                {region.name.charAt(0).toUpperCase() + region.name.slice(1)}
+                            </option>
+                        ))
+                    };
+                </select>
+            </div>
+        </>
     );
 }

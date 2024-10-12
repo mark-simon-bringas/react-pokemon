@@ -3,14 +3,15 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from "./Header";
 import PokeDetails from "./PokeDetails";
+import PokeNotFound from "./PokeNotFound";
 
 export default function PokeDex() {
+    const API_URL = 'https://pokeapi.co/api/v2';
     const [pokemon, setPokemon] = useState('');
     const [pokemonList, setPokemonList] = useState([]);
     const [filteredPokemonList, setFilteredPokemonList] = useState([]);
     const [activePokeRegion, setActivePokeRegion] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const API_URL = 'https://pokeapi.co/api/v2';
     const navigate = useNavigate();
     const regions = {
         all:    {name: "all", idStart: 1, idEnd: 1025},
@@ -64,7 +65,9 @@ export default function PokeDex() {
         if (!pokemon.trim()) {
             return;
         }
-        navigate(`/${pokemon}`);
+        const searchedPokemon = pokemonList.find(p => p.name.toLowerCase() === pokemon.toLowerCase());
+        const page = searchedPokemon ? `/${searchedPokemon.name}` : '/404';
+        navigate(page);
     };
     
     const handleRegionChange = async (regionName) => {
@@ -97,7 +100,7 @@ export default function PokeDex() {
                                         filteredPokemonList.map((pokemon, index) => {
                                             const regionId = pokemon.url.split('/')[6];
                                             return (
-                                                <div className="pokemon-card" key={index} onClick={() => handlePokeCard(pokemon.name)}>
+                                                <div className="pokemon-card" key={index} title={pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} onClick={() => handlePokeCard(pokemon.name)}>
                                                     <p className="id-number">{`#${regionId}`}</p>
                                                     <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${regionId}.png`} alt={pokemon.name} />
                                                     <span className="pokemon-name">{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</span>
@@ -113,6 +116,9 @@ export default function PokeDex() {
                     }
                 />
                 <Route path="/:pokemon" element={<PokeDetails />} />
+                {/* 404/No Path Pages */}
+                <Route path="*" element={<PokeNotFound />} />
+                <Route path="/404" element={<PokeNotFound />} />
             </Routes>
         </>
     );
