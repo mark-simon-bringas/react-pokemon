@@ -1,13 +1,26 @@
+import { Link } from 'react-router-dom';
 import Filters from "./Filters";
 
 export default function Header({ input, search, region }) {
     return (
         <>
             <header>
-                <h1>PokéDex</h1>
+                <Link to="/" style={{textDecoration: 'none'}}>
+                    <h1 title='PokéDex | Home'>PokéDex</h1>
+                </Link>
                 <div className="search-bar">
-                    <input type="text" onChange={input} placeholder="Search Pokemon" />
-                    <button onClick={search}>Search</button>
+                    <input 
+                        type="text" 
+                        placeholder="Search Pokémon" 
+                        title="Search Pokémon"
+                        onChange={input} 
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                search();
+                            }
+                        }}
+                    />
+                    <button title="Search" onClick={search}>Search</button>
                     <Filters onRegionChange={region} />
                 </div>
             </header>  
