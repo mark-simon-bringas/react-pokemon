@@ -9,8 +9,6 @@ export default function PokeDetails() {
     const { pokemon } = useParams();
     const [pokeData, setPokeData] = useState(null);
     const API_URL = 'https://pokeapi.co/api/v2';
-    const prevPokemon = pokeData?.id > 1 ? pokeData.id - 1 : null;
-    const nextPokemon = pokeData?.id < 1025 ? pokeData.id + 1 : null;
     const navigate = useNavigate();
     // wrapped in useMemo() function so that it doesn't get recalculated on every render
     const regionIdMax = useMemo(() => [
@@ -25,8 +23,26 @@ export default function PokeDetails() {
         {name: "Paldea", idMax: 1025}
     ], []);
     
-    const navigateToPokemon = (id) => {
-        navigate(`/${id}`);
+    const navigateToPokemon = (name) => {
+        navigate(`/${name.toLowerCase()}`);
+    }
+
+    const getPrevPokemon = async (id) => {
+        if (id > 1) {
+            const prev = await axios.get(`${API_URL}/pokemon/${id - 1}`).then(response =>  response.data.name);
+            return prev;
+        } else {
+            return null;
+        }
+    }
+    
+    const getNextPokemon = async (id) => {
+        if (id < 1025) {
+            const next = await axios.get(`${API_URL}/pokemon/${id + 1}`).then(response =>  response.data.name);
+            return next;
+        } else {
+            return null;
+        }
     }
 
     // wrapped in useCallback() function to prevent unnecessary re-renders
@@ -121,8 +137,8 @@ export default function PokeDetails() {
                 <div>
                     <div className="pokemon-navigation">
                         {
-                            prevPokemon && (
-                                <h2 onClick={() => navigateToPokemon(prevPokemon)} className="pokemon-previous">
+                            pokeData.id > 1 && (
+                                <h2 onClick={() => getPrevPokemon(pokeData.id).then(navigateToPokemon)} className="pokemon-previous">
                                     ←
                                 </h2>
                             )
@@ -134,8 +150,8 @@ export default function PokeDetails() {
                             }
                         </h2>
                         {
-                            nextPokemon && (
-                                <h2 onClick={() => navigateToPokemon(nextPokemon)} className="pokemon-next">
+                            pokeData.id < 1025 && (
+                                <h2 onClick={() => getNextPokemon(pokeData.id).then(navigateToPokemon)} className="pokemon-next">
                                     →
                                 </h2>
                             )
