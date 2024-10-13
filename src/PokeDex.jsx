@@ -107,14 +107,13 @@ export default function PokeDex() {
                                                 <div 
                                                     className="pokemon-card" 
                                                     key={index} 
-                                                    title={
-                                                        pokemon.name.charAt(0).toUpperCase() + 
-                                                        pokemon.name.slice(1)
-                                                    } 
                                                     onClick={() => handlePokeCard(pokemon.name)}
                                                 >
                                                     <p className="id-number">{`#${regionId}`}</p>
-                                                    <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${regionId}.png`} alt={pokemon.name} />
+                                                    <img 
+                                                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${regionId}.png`} 
+                                                        alt={pokemon.name}
+                                                    />
                                                     <span className="pokemon-name">
                                                         {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
                                                     </span>
