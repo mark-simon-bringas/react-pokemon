@@ -1,8 +1,9 @@
 /**
  * Integrated in the dropdown menu to filter list of Pokémon by Pokémon region.
 */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 export default function Filters({ onRegionChange }) {
     const [regions, setRegions] = useState([]);
@@ -41,3 +42,5 @@ export default function Filters({ onRegionChange }) {
         </>
     );
 }
+
+Filters.propTypes = {onRegionChange: PropTypes.func.isRequired};

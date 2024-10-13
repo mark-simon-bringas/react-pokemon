@@ -91,7 +91,61 @@ header {
   }
 }
 
+.pokemon-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokemon-previous, .pokemon-next {
+  cursor: pointer;
+  user-select: none;
+}
+
+.pokemon-name {
+  padding: 0px 15px;
+}
+
 /* parang magmukhang pine-pet mo ung pokemon */
 img.pokemon-sprite {
   cursor: grab;
+  user-select: none;
+}
+
+.pokemon-base-stats-name {
+  margin: 0;
+}
+
+.pokemon-evolution-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px 0;
+}
+
+.pokemon-evolution-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.pokemon-evolution-sprite {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pokemon-evolution-name {
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+.pokemon-evolution-arrow {
+  font-size: 25px;
+  margin: 0 10px;
+  cursor: default;
 }
