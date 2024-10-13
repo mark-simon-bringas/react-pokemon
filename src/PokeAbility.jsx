@@ -1,3 +1,6 @@
+/**
+ * Displays properly the abilities of a particular Pokémon.
+*/
 import PropTypes from 'prop-types';
 
 export default function PokeAbility({ abilities }) {

@@ -1,3 +1,6 @@
+/**
+ * Displays properly the evolution lineup of a particular Pokémon.
+*/
 import React from 'react';
 import PropTypes from 'prop-types';
 

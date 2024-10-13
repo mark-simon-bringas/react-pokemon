@@ -25,10 +25,12 @@ export default function PokeDetails() {
         {name: "Paldea", idMax: 1025}
     ], []);
     
+    // main navigation function to go to the correct pokemon pages
     const navigateToPokemon = (name) => {
         navigate(`/${name.toLowerCase()}`);
     };
 
+    // runs when left arrow is clicked; goes to the previous pokemon basing from its id
     const getPrevPokemon = async (id) => {
         if (id > 1) {
             const prev = await axios.get(`${API_URL}/pokemon/${id - 1}`).then(response =>  response.data.name);
@@ -38,6 +40,7 @@ export default function PokeDetails() {
         }
     };
     
+    // runs when right arrow is clicked; goes to the next pokemon basing from its id
     const getNextPokemon = async (id) => {
         if (id < 1025) {
             const next = await axios.get(`${API_URL}/pokemon/${id + 1}`).then(response =>  response.data.name);
@@ -52,6 +55,7 @@ export default function PokeDetails() {
         return regionIdMax.find(region => region.idMax >= id).name;
     }, [regionIdMax]);
 
+    // fetches data to display for the PokeAbility component
     const fetchAbilityDetails = async (abilityUrl) => {
         const abilityDetails = [];
         for (const url of abilityUrl) {
@@ -63,7 +67,8 @@ export default function PokeDetails() {
         }
         return abilityDetails;
     };
-    
+
+    // determines evolution chain of the pokemon
     const determineEvolutionChain = (chain) => {
         const evos = [
             chain.species.name.charAt(0).toUpperCase() + 
@@ -80,7 +85,8 @@ export default function PokeDetails() {
         }
         return evos.join(' → ');
     };
-    
+
+    // fetches data to display for the PokeEvolution component
     const fetchEvolutionSprites = async (evolutionLine) => {
         const sprites = [];
         for (const name of evolutionLine) {
@@ -89,7 +95,8 @@ export default function PokeDetails() {
         }
         return sprites;
     };
-    
+
+    // calculates gender ratio basing from the rate value of female pokemon
     const calculateGenderRatio = (rate) => {
         if (rate === -1) {
             return "Genderless";
@@ -102,7 +109,8 @@ export default function PokeDetails() {
             return genderRatioData;
         }
     };
-    
+
+    // main data fetch
     useEffect(() => {
         const fetchPokeData = async () => {
             try {
@@ -162,6 +170,7 @@ export default function PokeDetails() {
             pokeData ? (
                 // already contains class names for styling
                 <div>
+                    {/*Pokemon Name and National PokéDex ID */}
                     <div className="pokemon-navigation">
                         {
                             pokeData.id > 1 && (
@@ -184,16 +193,22 @@ export default function PokeDetails() {
                             )
                         }
                     </div>
+                    {/* Species */}
                     <p className="pokemon-species">{pokeData.species}</p>
+                    {/* Sprite */}
                     <img 
                         src={pokeData.sprites.front_default} 
                         alt={pokeData.name} 
                         title={pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1)}
                         className="pokemon-sprite" 
-                        />
+                    />
+                    {/* Description */}
                     <p className="pokemon-description">Description: {pokeData.description}</p>
+                    {/* Height */}
                     <p className="pokemon-height">Height: {pokeData.height}</p>
+                    {/* Weight */}
                     <p className="pokemon-weight">Weight: {pokeData.weight}</p>
+                    {/* Types */}
                     <p className="pokemon-type">
                         Types: {
                             pokeData.types.map(t => 
@@ -201,16 +216,9 @@ export default function PokeDetails() {
                             ).join(', ')
                         }
                     </p>
-                    {/*
-                    <p className="pokemon-ability">
-                        Abilities: {
-                            pokeData.abilities.map(a => 
-                                a.ability.name.charAt(0).toUpperCase() + a.ability.name.slice(1)
-                            ).join(', ')
-                        }
-                    </p>
-                    */}
+                    {/* Abilities */}
                     <PokeAbility abilities={pokeData.abilityDetails} />
+                    {/* Base Statistics */}
                     <div className="pokemon-base-stats">
                         <p>Base Stats:</p>
                         {
@@ -235,11 +243,13 @@ export default function PokeDetails() {
                             ))
                         }
                     </div>
+                    {/* Evolution Lineup */}
                     <PokeEvolution 
                         evolutionLine={pokeData.evolutionLine.split(' → ')}
                         evolutionSprites={pokeData.evolutionSprites}
                         onEvolutionClick={navigateToPokemon}
                     />
+                    {/* Gender Ratio */}
                     <p className="pokemon-gender-ratio">
                         Gender Ratio:
                         {
@@ -248,7 +258,9 @@ export default function PokeDetails() {
                                 : ` Male: ${pokeData.genderRatio[1]}% Female: ${pokeData.genderRatio[0]}%`
                         }
                     </p>
+                    {/* Region */}
                     <p className="pokemon-region">Region: {pokeData.region}</p>
+                    {/* Cry */}
                     <p className="pokemon-cry">
                         Pokémon Cry:
                         <audio controls key={pokeData.id}>
