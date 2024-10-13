@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import PokeEvolution from "./PokeEvolution";
 
 export default function PokeDetails() {
     const { pokemon } = useParams();
@@ -25,7 +26,7 @@ export default function PokeDetails() {
     
     const navigateToPokemon = (name) => {
         navigate(`/${name.toLowerCase()}`);
-    }
+    };
 
     const getPrevPokemon = async (id) => {
         if (id > 1) {
@@ -34,7 +35,7 @@ export default function PokeDetails() {
         } else {
             return null;
         }
-    }
+    };
     
     const getNextPokemon = async (id) => {
         if (id < 1025) {
@@ -43,13 +44,51 @@ export default function PokeDetails() {
         } else {
             return null;
         }
-    }
-
+    };
+    
     // wrapped in useCallback() function to prevent unnecessary re-renders
     const determinePokeRegion = useCallback((id) => {
         return regionIdMax.find(region => region.idMax >= id).name;
     }, [regionIdMax]);
     
+    const determineEvolutionChain = (chain) => {
+        const evos = [
+            chain.species.name.charAt(0).toUpperCase() + 
+            chain.species.name.slice(1)
+        ];
+        let curr = chain;
+        
+        while (curr.evolves_to.length > 0) {
+            curr = curr.evolves_to[0];
+            evos.push(
+                curr.species.name.charAt(0).toUpperCase() +
+                curr.species.name.slice(1)
+            );
+        }
+        return evos.join(' → ');
+    };
+    
+    const fetchEvolutionSprites = async (evolutionLine) => {
+        const sprites = [];
+        for (const name of evolutionLine) {
+            const response = await axios.get(`${API_URL}/pokemon/${name.toLowerCase()}`);
+            sprites.push(response.data.sprites.front_default);
+        }
+        return sprites;
+    };
+    
+    const calculateGenderRatio = (rate) => {
+        if (rate === -1) {
+            return "Genderless";
+        } else {
+            const femaleRate = (rate / 8) * 100;
+            const maleRate = 100 - femaleRate;
+            // Female Percentage    = genderRatioData[0]
+            // Male Percentage      = genderRatioData[1]
+            const genderRatioData = [femaleRate.toFixed(2), maleRate.toFixed(2)];
+            return genderRatioData;
+        }
+    };
     
     useEffect(() => {
         const fetchPokeData = async () => {
@@ -74,6 +113,7 @@ export default function PokeDetails() {
                     : "Description not found.";
                 // * evolution line (e.g., Bulbasaur -> Ivysaur -> Venusaur)
                 const evolutionLine = determineEvolutionChain(pokeEvolutionData.data.chain);
+                const evolutionSprites = await fetchEvolutionSprites(evolutionLine.split(' → '));
                 // * gender ratio (e.g., 87.5% male, 12.5% female)
                 const genderRatio = calculateGenderRatio(pokeSpeciesData.data.gender_rate);
                 // * region (e.g., Kanto)
@@ -86,6 +126,7 @@ export default function PokeDetails() {
                     species, 
                     description, 
                     evolutionLine, 
+                    evolutionSprites, 
                     genderRatio, 
                     region, 
                     cry
@@ -98,36 +139,6 @@ export default function PokeDetails() {
         // re-runs hook to fetch and update details whenever a new pokemon is selected/searched 
         // re-runs determinePokeRegion() function in case of new function logic, since it depends on regionIdMax
     }, [pokemon, determinePokeRegion]);
-
-    const determineEvolutionChain = (chain) => {
-        const evos = [
-            chain.species.name.charAt(0).toUpperCase() + 
-            chain.species.name.slice(1)
-        ];
-        let curr = chain;
-        
-        while (curr.evolves_to.length > 0) {
-            curr = curr.evolves_to[0];
-            evos.push(
-                curr.species.name.charAt(0).toUpperCase() +
-                curr.species.name.slice(1)
-            );
-        }
-        return evos.join(' → ');
-    };
-    
-    const calculateGenderRatio = (rate) => {
-        if (rate === -1) {
-            return "Genderless";
-        } else {
-            const femaleRate = (rate / 8) * 100;
-            const maleRate = 100 - femaleRate;
-            // Female Percentage    = genderRatioData[0]
-            // Male Percentage      = genderRatioData[1]
-            const genderRatioData = [femaleRate.toFixed(2), maleRate.toFixed(2)];
-            return genderRatioData;
-        }
-    };
 
     return (
         <>
@@ -177,20 +188,33 @@ export default function PokeDetails() {
                     <p className="pokemon-ability">Abilities: {pokeData.abilities.map(a => a.ability.name).join(', ')}</p>
                     <div className="pokemon-base-stats">
                         <p>Base Stats:</p>
-                        <ul>
-                            {
-                                pokeData.stats.map((statsData) => (
-                                    <li key={statsData.stat.name}>
-                                        {
-                                            statsData.stat.name.charAt(0).toUpperCase() + 
-                                            statsData.stat.name.slice(1)}: {statsData.base_stat
-                                        }
-                                    </li>
-                                ))
-                            }
-                        </ul>
+                        {
+                            pokeData.stats.map((statsData) => (
+                                <p key={statsData.stat.name} className="pokemon-base-stats-name">
+                                    {
+                                        (() => {
+                                            // for text readability
+                                            switch (statsData.stat.name) {
+                                                case 'hp':
+                                                    return 'HP';
+                                                case 'special-attack':
+                                                    return 'Sp. Atk';
+                                                case 'special-defense':
+                                                    return 'Sp. Def';
+                                                default:
+                                                    return statsData.stat.name.charAt(0).toUpperCase() + statsData.stat.name.slice(1);
+                                            }
+                                        })()
+                                    }: {statsData.base_stat}
+                                </p>
+                            ))
+                        }
                     </div>
-                    <p className="pokemon-evolution-line">Evolution Line: {pokeData.evolutionLine}</p>
+                    <PokeEvolution 
+                        evolutionLine={pokeData.evolutionLine.split(' → ')}
+                        evolutionSprites={pokeData.evolutionSprites}
+                        onEvolutionClick={navigateToPokemon}
+                    />
                     <p className="pokemon-gender-ratio">
                         Gender Ratio:
                         {
