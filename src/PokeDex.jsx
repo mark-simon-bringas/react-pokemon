@@ -1,3 +1,7 @@
+/**
+ * Main page of the PokéDex.
+ * Displays the list of Pokémons depending on the filter given.
+*/
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -100,10 +104,20 @@ export default function PokeDex() {
                                         filteredPokemonList.map((pokemon, index) => {
                                             const regionId = pokemon.url.split('/')[6];
                                             return (
-                                                <div className="pokemon-card" key={index} title={pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} onClick={() => handlePokeCard(pokemon.name)}>
+                                                <div 
+                                                    className="pokemon-card" 
+                                                    key={index} 
+                                                    title={
+                                                        pokemon.name.charAt(0).toUpperCase() + 
+                                                        pokemon.name.slice(1)
+                                                    } 
+                                                    onClick={() => handlePokeCard(pokemon.name)}
+                                                >
                                                     <p className="id-number">{`#${regionId}`}</p>
                                                     <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${regionId}.png`} alt={pokemon.name} />
-                                                    <span className="pokemon-name">{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</span>
+                                                    <span className="pokemon-name">
+                                                        {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
+                                                    </span>
                                                 </div>
                                             );
                                         })

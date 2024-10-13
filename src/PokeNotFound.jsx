@@ -1,3 +1,6 @@
+/**
+ * 404 Not Found page of the PokéDex.
+*/
 import UnownQuestionMark from './assets/unown-question-mark.gif';   // located in assets folder, change GIF if necessary
 
 export default function PokeNotFound() {

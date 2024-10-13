@@ -1,3 +1,8 @@
+/**
+ * Header of the PokéDex.
+ * Contains the branding and Home, search field, search button, 
+ * and a dropdown menu to filter by Pokémon region.
+*/
 import { Link } from 'react-router-dom';
 import Filters from "./Filters";
 
