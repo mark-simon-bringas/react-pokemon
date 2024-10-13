@@ -39,9 +39,3 @@ Header.propTypes = {
     search: PropTypes.func.isRequired,
     region: PropTypes.func.isRequired
 };
-
-Header.defaultProps = {
-    input: () => {},
-    search: () => {},
-    region: () => {}
-};

@@ -44,4 +44,3 @@ export default function Filters({ onRegionChange }) {
 }
 
 Filters.propTypes = {onRegionChange: PropTypes.func.isRequired};
-Filters.defaultProps = {onRegionChange: () => {}};
