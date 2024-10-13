@@ -45,7 +45,7 @@ export default function PokeDetails() {
                         .replace(/&#\d+;/g, '')
                         .replace(/[^a-zA-ZéÉ\s,.!?'-]/g, '')
                         .replace(/\n/g, ' ')
-                        .replace(/\u000C/g, ' ')
+                        .replace(/\f/g, ' ')
                         .trim()
                     : "Description not found.";
                 // * evolution line (e.g., Bulbasaur -> Ivysaur -> Venusaur)
