@@ -14,20 +14,20 @@ export default function PokeDex() {
     const [pokemon, setPokemon] = useState('');
     const [pokemonList, setPokemonList] = useState([]);
     const [filteredPokemonList, setFilteredPokemonList] = useState([]);
-    const [activePokeRegion, setActivePokeRegion] = useState(null);
+    const [activePokeRegion, setActivePokeRegion] = useState({name: "All Regions", idStart: 1, idEnd: 1025});   // default filter is All Regions
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const regions = {
-        all:    {name: "all", idStart: 1, idEnd: 1025},
-        kanto:  {name: "kanto", idStart: 1, idEnd: 151},
-        johto:  {name: "johto", idStart: 152, idEnd: 251},
-        hoenn:  {name: "hoenn", idStart: 252, idEnd: 386},
-        sinnoh: {name: "sinnoh", idStart: 387, idEnd: 493},
-        unova:  {name: "unova", idStart: 494, idEnd: 649},
-        kalos:  {name: "kalos", idStart: 650, idEnd: 721},
-        alola:  {name: "alola", idStart: 722, idEnd: 809},
-        galar:  {name: "galar", idStart: 810, idEnd: 905},
-        paldea: {name: "paldea", idStart: 906, idEnd: 1025}
+        all:    {name: "All Regions", idStart: 1, idEnd: 1025},
+        kanto:  {name: "Kanto Region", idStart: 1, idEnd: 151},
+        johto:  {name: "Johto Region", idStart: 152, idEnd: 251},
+        hoenn:  {name: "Hoenn Region", idStart: 252, idEnd: 386},
+        sinnoh: {name: "Sinnoh Region", idStart: 387, idEnd: 493},
+        unova:  {name: "Unova Region", idStart: 494, idEnd: 649},
+        kalos:  {name: "Kalos Region", idStart: 650, idEnd: 721},
+        alola:  {name: "Alola Region", idStart: 722, idEnd: 809},
+        galar:  {name: "Galar Region", idStart: 810, idEnd: 905},
+        paldea: {name: "Paldea Region", idStart: 906, idEnd: 1025}
     };
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function PokeDex() {
         const isNumber = !isNaN(searchTerm) && searchTerm.trim() !== '';
         const filteredList = pokemonList.filter((pokemon, index) => {
             const id = (index + 1).toString();
-            const inRegion = !region || (id >= region.idStart && id <= region.idEnd);
+            const inRegion = (region.name === "All Regions") || (id >= region.idStart && id <= region.idEnd);
             if (isNumber) {
                 return inRegion && id.toString().startsWith(searchTerm);
             } else {
@@ -75,7 +75,7 @@ export default function PokeDex() {
     };
     
     const handleRegionChange = async (regionName) => {
-        const region = regions[regionName.toLowerCase()];
+        const region = regions[regionName.toLowerCase()] || regions.all;
         setActivePokeRegion(region);
         handleFilters(pokemon, region);
     };
@@ -99,29 +99,35 @@ export default function PokeDex() {
                             <p>Loading...</p>
                         ) : (
                             filteredPokemonList.length > 0 ? (
-                                <div className="pokemon-grid">
-                                    {
-                                        filteredPokemonList.map((pokemon, index) => {
-                                            const regionId = pokemon.url.split('/')[6];
-                                            return (
-                                                <div 
-                                                    className="pokemon-card" 
-                                                    key={index} 
-                                                    onClick={() => handlePokeCard(pokemon.name)}
-                                                >
-                                                    <p className="id-number">{`#${regionId}`}</p>
-                                                    <img 
-                                                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${regionId}.png`} 
-                                                        alt={pokemon.name}
-                                                    />
-                                                    <span className="pokemon-name">
-                                                        {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-                                                    </span>
-                                                </div>
-                                            );
-                                        })
-                                    }
-                                </div>
+                                <>
+                                    {/* Region Header */}
+                                    <h1>{activePokeRegion.name}</h1>
+                                    {/* List of Pokémons basing on region filter */}                                
+                                    <div className="pokemon-grid">
+                                        {
+                                            filteredPokemonList.map((pokemon, index) => {
+                                                const regionId = pokemon.url.split('/')[6];
+                                                return (
+                                                    // Pokémon card component
+                                                    <div 
+                                                        className="pokemon-card" 
+                                                        key={index} 
+                                                        onClick={() => handlePokeCard(pokemon.name)}
+                                                    >
+                                                        <p className="id-number">{`#${regionId}`}</p>
+                                                        <img 
+                                                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${regionId}.png`} 
+                                                            alt={pokemon.name}
+                                                        />
+                                                        <span className="pokemon-name">
+                                                            {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })
+                                        }
+                                    </div>
+                                </>
                             ) : (
                                 <p>No Pokémon found.</p>
                             )
