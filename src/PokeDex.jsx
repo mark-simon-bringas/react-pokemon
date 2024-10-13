@@ -60,16 +60,31 @@ export default function PokeDex() {
     }
 
     const handleInputChange = (e) => {
-        const searchTerm = e.target.value.toLowerCase();
+        let searchTerm = e.target.value.toLowerCase().trim();
         setPokemon(searchTerm);
-        handleFilters(searchTerm, activePokeRegion);
+        if (!searchTerm) {
+            handleFilters('', activePokeRegion);
+            navigate('/');
+        } else {
+            handleFilters(searchTerm, activePokeRegion);
+        }
     };
 
     const handleSearch = async () => {
         if (!pokemon.trim()) {
-            return;
+            handleFilters('', activePokeRegion);
+            navigate('/');
+            return null;
         }
-        const searchedPokemon = pokemonList.find(p => p.name.toLowerCase() === pokemon.toLowerCase());
+        
+        const isPokeId = !isNaN(pokemon) && pokemon.trim() !== '';
+        let searchedPokemon;
+        if (isPokeId) {
+            const id = parseInt(pokemon);
+            searchedPokemon = pokemonList.find((_pokemon, index) => (index + 1) === id)
+        } else {
+            searchedPokemon = pokemonList.find(p => p.name.toLowerCase() === pokemon.toLowerCase());
+        }
         const page = searchedPokemon ? `/${searchedPokemon.name}` : '/404';
         navigate(page);
     };
