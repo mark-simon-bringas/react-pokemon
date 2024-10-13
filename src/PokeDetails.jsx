@@ -205,9 +205,9 @@ export default function PokeDetails() {
                     {/* Description */}
                     <p className="pokemon-description">Description: {pokeData.description}</p>
                     {/* Height */}
-                    <p className="pokemon-height">Height: {pokeData.height}</p>
+                    <p className="pokemon-height">Height: {parseFloat((pokeData.height / 10).toFixed(2))} meters</p>
                     {/* Weight */}
-                    <p className="pokemon-weight">Weight: {pokeData.weight}</p>
+                    <p className="pokemon-weight">Weight: {parseFloat((pokeData.weight * 100).toFixed(5))} grams</p>
                     {/* Types */}
                     <p className="pokemon-type">
                         Types: {
