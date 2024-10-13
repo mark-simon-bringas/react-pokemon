@@ -27,7 +27,11 @@ export default function PokeDetails() {
     
     // main navigation function to go to the correct pokemon pages
     const navigateToPokemon = (name) => {
-        navigate(`/${name.toLowerCase()}`);
+        try {
+            navigate(`/${name.toLowerCase()}`);
+        } catch (err) {
+            console.error("ERROR: Error navigating to Pokémon details:", err);
+        }
     };
 
     // runs when left arrow is clicked; goes to the previous pokemon basing from its id
@@ -59,11 +63,19 @@ export default function PokeDetails() {
     const fetchAbilityDetails = async (abilityUrl) => {
         const abilityDetails = [];
         for (const url of abilityUrl) {
-            const response = await axios.get(url);
-            abilityDetails.push({
-                name: response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1),
-                desc: response.data.effect_entries.find(entry => entry.language.name === 'en')?.effect || "Description not available."
-            });
+            try {
+                const response = await axios.get(url);
+                abilityDetails.push({
+                    name: response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1),
+                    desc: response.data.effect_entries.find(entry => entry.language.name === 'en')?.effect || "Description not available."
+                });
+            } catch (err) {
+                console.error("ERROR: Error fetching ability details:", err);
+                abilityDetails.push({
+                    name: "Unknown ability.",
+                    desc: "Description not available."
+                });
+            }
         }
         return abilityDetails;
     };
@@ -90,8 +102,13 @@ export default function PokeDetails() {
     const fetchEvolutionSprites = async (evolutionLine) => {
         const sprites = [];
         for (const name of evolutionLine) {
-            const response = await axios.get(`${API_URL}/pokemon/${name.toLowerCase()}`);
-            sprites.push(response.data.sprites.front_default);
+            try {
+                const response = await axios.get(`${API_URL}/pokemon/${name.toLowerCase()}`);
+                sprites.push(response.data.sprites.front_default);
+            } catch (err) {
+                console.error("ERROR: Error fetching evolution sprite:", err);
+                sprites.push(null);
+            }
         }
         return sprites;
     };

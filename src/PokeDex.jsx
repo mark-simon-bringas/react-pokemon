@@ -60,43 +60,59 @@ export default function PokeDex() {
     }
 
     const handleInputChange = (e) => {
-        let searchTerm = e.target.value.toLowerCase().trim();
-        setPokemon(searchTerm);
-        if (!searchTerm) {
-            handleFilters('', activePokeRegion);
-            navigate('/');
-        } else {
-            handleFilters(searchTerm, activePokeRegion);
+        try {
+            let searchTerm = e.target.value.toLowerCase().trim();
+            setPokemon(searchTerm);
+            if (!searchTerm) {
+                handleFilters('', activePokeRegion);
+                navigate('/');
+            } else {
+                handleFilters(searchTerm, activePokeRegion);
+            }
+        } catch (err) {
+            console.error("ERROR: Error handling input change:", err);
         }
     };
 
     const handleSearch = async () => {
-        if (!pokemon.trim()) {
-            handleFilters('', activePokeRegion);
-            navigate('/');
-            return null;
+        try {
+            if (!pokemon.trim()) {
+                handleFilters('', activePokeRegion);
+                navigate('/');
+                return null;
+            }
+            
+            const isPokeId = !isNaN(pokemon) && pokemon.trim() !== '';
+            let searchedPokemon;
+            if (isPokeId) {
+                const id = parseInt(pokemon);
+                searchedPokemon = pokemonList.find((_pokemon, index) => (index + 1) === id)
+            } else {
+                searchedPokemon = pokemonList.find(p => p.name.toLowerCase() === pokemon.toLowerCase());
+            }
+            const page = searchedPokemon ? `/${searchedPokemon.name}` : '/404';
+            navigate(page);
+        } catch (err) {
+            console.error("ERROR: Error handling search:", err);
         }
-        
-        const isPokeId = !isNaN(pokemon) && pokemon.trim() !== '';
-        let searchedPokemon;
-        if (isPokeId) {
-            const id = parseInt(pokemon);
-            searchedPokemon = pokemonList.find((_pokemon, index) => (index + 1) === id)
-        } else {
-            searchedPokemon = pokemonList.find(p => p.name.toLowerCase() === pokemon.toLowerCase());
-        }
-        const page = searchedPokemon ? `/${searchedPokemon.name}` : '/404';
-        navigate(page);
     };
     
     const handleRegionChange = async (regionName) => {
-        const region = regions[regionName.toLowerCase()] || regions.all;
-        setActivePokeRegion(region);
-        handleFilters(pokemon, region);
+        try {
+            const region = regions[regionName.toLowerCase()] || regions.all;
+            setActivePokeRegion(region);
+            handleFilters(pokemon, region);
+        } catch (err) {
+            console.error("ERROR: Error changing region:", err);
+        }
     };
     
     const handlePokeCard = async (pokemon) => {
-        navigate(`/${pokemon}`);
+        try {
+            navigate(`/${pokemon}`);
+        } catch (err) {
+            console.error("ERROR: Error navigating to Pokémon details:", err);
+        }
     };
 
     return (
