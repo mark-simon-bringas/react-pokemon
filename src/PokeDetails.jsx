@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+/**
+ * Displays the PokéDex information of a particular pokemon.
+*/
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -6,7 +9,8 @@ export default function PokeDetails() {
     const { pokemon } = useParams();
     const [pokeData, setPokeData] = useState(null);
     const API_URL = 'https://pokeapi.co/api/v2';
-    const regionIdMax = [
+    // wrapped in useMemo() function so that it doesn't get recalculated on every render
+    const regionIdMax = useMemo(() => [
         {name: "Kanto", idMax: 151},
         {name: "Johto", idMax: 251},
         {name: "Hoenn", idMax: 386},
@@ -16,7 +20,12 @@ export default function PokeDetails() {
         {name: "Alola", idMax: 809},
         {name: "Galar", idMax: 905},
         {name: "Paldea", idMax: 1025}
-    ];
+    ], []);
+
+    // wrapped in useCallback() function to prevent unnecessary re-renders
+    const determinePokeRegion = useCallback((id) => {
+        return regionIdMax.find(region => region.idMax >= id).name;
+    }, [regionIdMax]);
 
     useEffect(() => {
         const fetchPokeData = async () => {
@@ -62,11 +71,9 @@ export default function PokeDetails() {
             }
         };
         fetchPokeData();
-    }, [pokemon]);
-
-    const determinePokeRegion = (id) => {
-        return regionIdMax.find(region => region.idMax >= id).name;
-    };
+        // re-runs hook to fetch and update details whenever a new pokemon is selected/searched 
+        // re-runs determinePokeRegion() function in case of new function logic, since it depends on regionIdMax
+    }, [pokemon, determinePokeRegion]);
 
     const determineEvolutionChain = (chain) => {
         const evos = [
@@ -102,20 +109,7 @@ export default function PokeDetails() {
         <>
         {
             pokeData ? (
-                /*
-                * PokéDex Number + Pokemon Name
-                * Species
-                * Sprite / Model
-                * Description
-                * Height
-                * Weight
-                * Type(s)
-                * Abilities
-                * Base Stats
-                * Gender Ratio
-                * Region
-                * Cry
-                */
+                // already contains class names for styling
                 <div>
                     <h2 className="pokemon-name">
                         &#x2116; {pokeData.id}: {
@@ -130,7 +124,7 @@ export default function PokeDetails() {
                         title={pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1)}
                         className="pokemon-sprite" 
                     />
-                    <p className="pokemon-">Description: {pokeData.description}</p>
+                    <p className="pokemon-description">Description: {pokeData.description}</p>
                     <p className="pokemon-height">Height: {pokeData.height}</p>
                     <p className="pokemon-weight">Weight: {pokeData.weight}</p>
                     <p className="pokemon-type">

@@ -1,3 +1,6 @@
+/**
+ * Integrated in the dropdown menu to filter list of Pokémon by Pokémon region.
+*/
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
