@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import PokeEvolution from "./PokeEvolution";
+import PokeAbility from "./PokeAbility";
 
 export default function PokeDetails() {
     const { pokemon } = useParams();
@@ -50,6 +51,18 @@ export default function PokeDetails() {
     const determinePokeRegion = useCallback((id) => {
         return regionIdMax.find(region => region.idMax >= id).name;
     }, [regionIdMax]);
+
+    const fetchAbilityDetails = async (abilityUrl) => {
+        const abilityDetails = [];
+        for (const url of abilityUrl) {
+            const response = await axios.get(url);
+            abilityDetails.push({
+                name: response.data.name.charAt(0).toUpperCase() + response.data.name.slice(1),
+                desc: response.data.effect_entries.find(entry => entry.language.name === 'en')?.effect || "Description not available."
+            });
+        }
+        return abilityDetails;
+    };
     
     const determineEvolutionChain = (chain) => {
         const evos = [
@@ -111,6 +124,8 @@ export default function PokeDetails() {
                         .replace(/\f/g, ' ')
                         .trim()
                     : "Description not found.";
+                // * abiility (e.g., Overgrown: <description>, Chlorophyll: <description>)
+                const abilityDetails = await fetchAbilityDetails(response.data.abilities.map(a => a.ability.url));
                 // * evolution line (e.g., Bulbasaur -> Ivysaur -> Venusaur)
                 const evolutionLine = determineEvolutionChain(pokeEvolutionData.data.chain);
                 const evolutionSprites = await fetchEvolutionSprites(evolutionLine.split(' → '));
@@ -125,6 +140,7 @@ export default function PokeDetails() {
                     ... response.data, 
                     species, 
                     description, 
+                    abilityDetails, 
                     evolutionLine, 
                     evolutionSprites, 
                     genderRatio, 
@@ -185,7 +201,16 @@ export default function PokeDetails() {
                             ).join(', ')
                         }
                     </p>
-                    <p className="pokemon-ability">Abilities: {pokeData.abilities.map(a => a.ability.name).join(', ')}</p>
+                    {/*
+                    <p className="pokemon-ability">
+                        Abilities: {
+                            pokeData.abilities.map(a => 
+                                a.ability.name.charAt(0).toUpperCase() + a.ability.name.slice(1)
+                            ).join(', ')
+                        }
+                    </p>
+                    */}
+                    <PokeAbility abilities={pokeData.abilityDetails} />
                     <div className="pokemon-base-stats">
                         <p>Base Stats:</p>
                         {
