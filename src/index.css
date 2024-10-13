@@ -91,7 +91,23 @@ header {
   }
 }
 
+.pokemon-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokemon-previous, .pokemon-next {
+  cursor: pointer;
+  user-select: none;
+}
+
+.pokemon-name {
+  padding: 0px 15px;
+}
+
 /* parang magmukhang pine-pet mo ung pokemon */
 img.pokemon-sprite {
   cursor: grab;
+  user-select: none;
 }

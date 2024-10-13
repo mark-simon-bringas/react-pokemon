@@ -2,13 +2,16 @@
  * Displays the PokéDex information of a particular pokemon.
 */
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function PokeDetails() {
     const { pokemon } = useParams();
     const [pokeData, setPokeData] = useState(null);
     const API_URL = 'https://pokeapi.co/api/v2';
+    const prevPokemon = pokeData?.id > 1 ? pokeData.id - 1 : null;
+    const nextPokemon = pokeData?.id < 1025 ? pokeData.id + 1 : null;
+    const navigate = useNavigate();
     // wrapped in useMemo() function so that it doesn't get recalculated on every render
     const regionIdMax = useMemo(() => [
         {name: "Kanto", idMax: 151},
@@ -21,12 +24,17 @@ export default function PokeDetails() {
         {name: "Galar", idMax: 905},
         {name: "Paldea", idMax: 1025}
     ], []);
+    
+    const navigateToPokemon = (id) => {
+        navigate(`/${id}`);
+    }
 
     // wrapped in useCallback() function to prevent unnecessary re-renders
     const determinePokeRegion = useCallback((id) => {
         return regionIdMax.find(region => region.idMax >= id).name;
     }, [regionIdMax]);
-
+    
+    
     useEffect(() => {
         const fetchPokeData = async () => {
             try {
@@ -56,7 +64,7 @@ export default function PokeDetails() {
                 const region = response.data.region = determinePokeRegion(response.data.id);
                 // * cry - taken from external repo
                 const cry = `https://veekun.com/dex/media/pokemon/cries/${response.data.id}.ogg`;
-
+                
                 setPokeData({
                     ... response.data, 
                     species, 
@@ -81,7 +89,7 @@ export default function PokeDetails() {
             chain.species.name.slice(1)
         ];
         let curr = chain;
-
+        
         while (curr.evolves_to.length > 0) {
             curr = curr.evolves_to[0];
             evos.push(
@@ -91,7 +99,7 @@ export default function PokeDetails() {
         }
         return evos.join(' → ');
     };
-
+    
     const calculateGenderRatio = (rate) => {
         if (rate === -1) {
             return "Genderless";
@@ -111,19 +119,35 @@ export default function PokeDetails() {
             pokeData ? (
                 // already contains class names for styling
                 <div>
-                    <h2 className="pokemon-name">
-                        &#x2116; {pokeData.id}: {
-                            pokeData.name.charAt(0).toUpperCase() + 
-                            pokeData.name.slice(1)
+                    <div className="pokemon-navigation">
+                        {
+                            prevPokemon && (
+                                <h2 onClick={() => navigateToPokemon(prevPokemon)} className="pokemon-previous">
+                                    ←
+                                </h2>
+                            )
                         }
-                    </h2>
+                        <h2 className="pokemon-name">
+                            &#x2116; {pokeData.id}: {
+                                pokeData.name.charAt(0).toUpperCase() + 
+                                pokeData.name.slice(1)
+                            }
+                        </h2>
+                        {
+                            nextPokemon && (
+                                <h2 onClick={() => navigateToPokemon(nextPokemon)} className="pokemon-next">
+                                    →
+                                </h2>
+                            )
+                        }
+                    </div>
                     <p className="pokemon-species">{pokeData.species}</p>
                     <img 
                         src={pokeData.sprites.front_default} 
                         alt={pokeData.name} 
                         title={pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1)}
                         className="pokemon-sprite" 
-                    />
+                        />
                     <p className="pokemon-description">Description: {pokeData.description}</p>
                     <p className="pokemon-height">Height: {pokeData.height}</p>
                     <p className="pokemon-weight">Weight: {pokeData.weight}</p>
