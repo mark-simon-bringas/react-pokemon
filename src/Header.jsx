@@ -4,6 +4,7 @@
  * and a dropdown menu to filter by Pokémon region.
 */
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import Filters from "./Filters";
 
 export default function Header({ input, search, region }) {
@@ -31,4 +32,16 @@ export default function Header({ input, search, region }) {
             </header>  
         </>
     )
+};
+
+Header.propTypes = {
+    input: PropTypes.func.isRequired,
+    search: PropTypes.func.isRequired,
+    region: PropTypes.func.isRequired
+};
+
+Header.defaultProps = {
+    input: () => {},
+    search: () => {},
+    region: () => {}
 };

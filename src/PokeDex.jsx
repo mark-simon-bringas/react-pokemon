@@ -2,7 +2,7 @@
  * Main page of the PokéDex.
  * Displays the list of Pokémons depending on the filter given.
 */
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from "./Header";
