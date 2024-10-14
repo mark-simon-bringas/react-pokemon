@@ -33,7 +33,7 @@ body {
   font-size: 1rem;
   text-align: center; /* Temporary design */
   margin: 0;
-  background-image: url('assets/PokeDex.gif');
+  background-image: url('./assets/PokeDex.gif');
   background-attachment: fixed;
   background-size: 100%;
 }
@@ -228,6 +228,7 @@ header {
 .detail-img-wrapper img {
   width: 100%;
   height: 100%;
+  cursor: pointer;
 }
 
 .detail-card-detail-wrapper {

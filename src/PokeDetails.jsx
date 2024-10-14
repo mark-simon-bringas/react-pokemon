@@ -1,17 +1,17 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import PokeEvolution from "./PokeEvolution";
 import PokeAbility from "./PokeAbility";
 
 export default function PokeDetails() {
+    const API_URL = 'https://pokeapi.co/api/v2';
     const { pokemon } = useParams();
     const [pokeData, setPokeData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const API_URL = 'https://pokeapi.co/api/v2';
     const navigate = useNavigate();
-
+    
     const regionIdMax = useMemo(() => [
         { name: "Kanto", idMax: 151 },
         { name: "Johto", idMax: 251 },
@@ -23,6 +23,27 @@ export default function PokeDetails() {
         { name: "Galar", idMax: 905 },
         { name: "Paldea", idMax: 1025 }
     ], []);
+
+    const typeColors = {
+        normal: "#A8A878",
+        fire: "#F08030",
+        water: "#6890F0",
+        electric: "#F8D030",
+        grass: "#78C850",
+        ice: "#98D8D8",
+        fighting: "#C03028",
+        poison: "#A040A0",
+        ground: "#E0C068",
+        flying: "#A890F0",
+        psychic: "#F85888",
+        bug: "#A8B820",
+        rock: "#B8A038",
+        ghost: "#705898",
+        dragon: "#7038F8",
+        dark: "#705848",
+        steel: "#B8B8D0",
+        fairy: "#EE99AC"
+    };
 
     const navigateToPokemon = (name) => {
         navigate(`/${name.toLowerCase()}`);
@@ -152,7 +173,12 @@ export default function PokeDetails() {
                 <div className="header-wrapper">
                     <div className="header-wrap">
                         <a href="/" className="back-btn-wrap">
-                            <img src="src/assets/back-to-home.svg" alt="back to home" className="back-btn" id="back-btn" />
+                            <img 
+                                src="src/assets/back-to-home.svg" 
+                                alt="back to home" 
+                                className="back-btn" 
+                                id="back-btn"
+                            />
                         </a>
                         <div className="name-wrap">
                             <h1 className="name">
@@ -168,21 +194,47 @@ export default function PokeDetails() {
                 </div>
             </header>
             <div className="featured-img">
-                <a href="#" className="arrow left-arrow" id="leftArrow" onClick={() => pokeData && getPrevPokemon(pokeData.id).then(prevName => navigateToPokemon(prevName))}>
+                <a 
+                    href="#" 
+                    className="arrow left-arrow" 
+                    id="leftArrow" 
+                    onClick={() => pokeData && getPrevPokemon(pokeData.id).then(prevName => navigateToPokemon(prevName))}
+                >
                     <img src="src/assets/chevron_left.svg" alt="back" />
                 </a>
                 <div className="detail-img-wrapper">
-                    <img src={pokeData ? pokeData.sprites.front_default : ""} alt={pokeData ? pokeData.name : ""} />
+                    <img 
+                        src={pokeData ? pokeData.sprites.front_default : ""} 
+                        alt={pokeData ? pokeData.name : ""} 
+                        title={pokeData ? pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1) : ""}
+                        onClick={() => {
+                            const cryAudio = new Audio(pokeData.cry);
+                            cryAudio.play();
+                        }}
+                    />
                 </div>
-                <a href="#" className="arrow right-arrow" id="rightArrow" onClick={() => pokeData && getNextPokemon(pokeData.id).then(nextName => navigateToPokemon(nextName))}>
+                <a 
+                    href="#" 
+                    className="arrow right-arrow" 
+                    id="rightArrow" 
+                    onClick={() => pokeData && getNextPokemon(pokeData.id).then(nextName => navigateToPokemon(nextName))}
+                >
                     <img src="src/assets/chevron_right.svg" alt="forward" />
                 </a>
             </div>
             <div className="detail-card-detail-wrapper">
                 <div className="power-wrapper">
-                    {pokeData && pokeData.types.map((t, index) => (
-                        <p key={index} className={`body3-fonts type ${t.type.name}`}>{t.type.name.charAt(0).toUpperCase() + t.type.name.slice(1)}</p>
-                    ))}
+                    {
+                        pokeData && pokeData.types.map((t, index) => (
+                            <p 
+                                key={index} 
+                                className={`body3-fonts type ${t.type.name}`} 
+                                style={{ backgroundColor: typeColors[t.type.name] || "#000000" }}
+                            >
+                                {t.type.name.charAt(0).toUpperCase() + t.type.name.slice(1)}
+                            </p>
+                        ))
+                    }
                 </div>
                 <p className="body2-fonts about-text">About</p>
                 <div className="pokemon-detail-wrapper">
@@ -214,37 +266,51 @@ export default function PokeDetails() {
                 <div className="gender-wrapper">
                     <p className="caption-fonts">Gender Ratio</p>
                     <div className="gender-container">
-                        {pokeData && pokeData.genderRatio[0] !== "Genderless" ? (
-                            <>
-                                <div className="male-gender">
-                                    <p className="body3-fonts">{pokeData.genderRatio[1]}% Male</p>
-                                </div>
-                                <div className="female-gender">
-                                    <p className="body3-fonts">{pokeData.genderRatio[0]}% Female</p>
-                                </div>
-                            </>
-                        ) : (
-                            <p className="body3-fonts genderless">{pokeData.genderRatio[0]}</p>
-                        )}
+                        {
+                            pokeData && pokeData.genderRatio[0] !== "Genderless" ? (
+                                <>
+                                    <div className="male-gender">
+                                        <p className="body3-fonts">{pokeData.genderRatio[1]}% Male</p>
+                                    </div>
+                                    <div className="female-gender">
+                                        <p className="body3-fonts">{pokeData.genderRatio[0]}% Female</p>
+                                    </div>
+                                </>
+                            ) : (
+                                <p className="body3-fonts genderless">{pokeData.genderRatio[0]}</p>
+                            )
+                        }
                     </div>
                 </div>
-                <div className="cry-wrapper">
-                    <audio controls>
-                        <source src={pokeData ? pokeData.cry : ""} />
-                    </audio>
-                </div>
                 <div className="stats-wrapper">
-                    {pokeData && pokeData.stats.map((statsData) => (
-                        <div className="stat-wrap" key={statsData.stat.name}>
-                            <div className="stat">
-                                <p className="caption-fonts">{statsData.stat.name.charAt(0).toUpperCase() + statsData.stat.name.slice(1)}</p>
-                                <p className="stats-fonts">{statsData.base_stat}</p>
-                            </div>
-                            <div className="stat-bar">
-                                <div className="progress-bar" style={{ width: `${statsData.base_stat / 2}%` }}></div>
-                            </div>
-                        </div>
-                    ))}
+                    {
+                        pokeData && pokeData.stats.map((statsData) => {
+                            const statName = statsData.stat.name
+                                .replace('hp', 'HP')
+                                .replace('special-attack', 'Sp. Atk')
+                                .replace('special-defense', 'Sp. Def');
+                            // color is based on the first type of the pokemon
+                            const statBarColor = (pokeData.types.length > 0) ? typeColors[pokeData.types[0].type.name] : "#000000";
+                            return (
+                                <div className="stat-wrap" key={statsData.stat.name}>
+                                    <div className="stat">
+                                        <p className="caption-fonts">{statName.charAt(0).toUpperCase() + statName.slice(1)}</p>
+                                        <p className="stats-fonts">{statsData.base_stat}</p>
+                                    </div>
+                                    <div className="stat-bar">
+                                        <div 
+                                            className="progress-bar" 
+                                            style={{ 
+                                                backgroundColor: statBarColor, 
+                                                width: `${statsData.base_stat / 2}%` 
+                                            }}
+                                        >
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
                 <PokeAbility abilities={pokeData?.abilityDetails} />
                 <PokeEvolution evolutionLine={pokeData?.evolutionLine} evolutionSprites={pokeData?.evolutionSprites} />
