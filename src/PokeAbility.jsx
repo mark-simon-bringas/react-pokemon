@@ -1,6 +1,9 @@
-import React from "react";
+/**
+ * Displays properly the abilities of a particular Pokémon.
+*/
+import PropTypes from 'prop-types';
 
-const PokeAbility = ({ abilities }) => {
+export default function PokeAbility({ abilities }) {
     return (
         <div className="abilities-wrapper">
             <p className="caption-fonts">Abilities</p>
@@ -16,4 +19,11 @@ const PokeAbility = ({ abilities }) => {
     );
 };
 
-export default PokeAbility;
+PokeAbility.propTypes = {
+    abilities: PropTypes.arrayOf(
+        PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            desc: PropTypes.string.isRequired
+        })
+    ).isRequired
+};

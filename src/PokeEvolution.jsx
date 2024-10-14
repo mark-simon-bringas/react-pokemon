@@ -1,8 +1,12 @@
+/**
+ * Displays properly the evolution lineup of a particular Pokémon.
+*/
 import React from "react";
+import PropTypes from 'prop-types';
 
-const PokeEvolution = ({ evolutionLine, evolutionSprites }) => {
+export default function PokeEvolution({ evolutionLine, evolutionSprites }) {
     const evolutions = evolutionLine.split(' → ');
-
+    
     return (
         <div className="evolution-wrapper">
             <p className="caption-fonts">Evolution</p>
@@ -32,4 +36,8 @@ const PokeEvolution = ({ evolutionLine, evolutionSprites }) => {
     );
 };
 
-export default PokeEvolution;
+PokeEvolution.propTypes = {
+    evolutionLine: PropTypes.arrayOf(PropTypes.string).isRequired,
+    evolutionSprites: PropTypes.arrayOf(PropTypes.string).isRequired,
+    onEvolutionClick: PropTypes.func.isRequired
+}
