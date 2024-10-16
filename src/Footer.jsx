@@ -1,7 +1,7 @@
 export default function Footer() {
     return (
         <>
-            <hr />
+            <br /><br /><br />
             <footer>
                 <p>&copy; {new Date().getFullYear()} || 
                 Created By: Mark Simon Bringas and R J Salcedo

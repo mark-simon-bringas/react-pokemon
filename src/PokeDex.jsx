@@ -17,6 +17,10 @@ export default function PokeDex() {
     const [activePokeRegion, setActivePokeRegion] = useState({name: "All Regions", idStart: 1, idEnd: 1025});   // default filter is All Regions
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+<<<<<<< HEAD
+    // region name, id of the first pokemon of the region, id of the last pokemon in the region
+=======
+>>>>>>> main
     const regions = {
         all:    {name: "All Regions", idStart: 1, idEnd: 1025},
         kanto:  {name: "Kanto Region", idStart: 1, idEnd: 151},
@@ -44,7 +48,11 @@ export default function PokeDex() {
         };
         fetchAllPokemon();
     }, []);
+<<<<<<< HEAD
+    // handles search filter
+=======
 
+>>>>>>> main
     const handleFilters = (searchTerm, region) => {
         const isNumber = !isNaN(searchTerm) && searchTerm.trim() !== '';
         const filteredList = pokemonList.filter((pokemon, index) => {
@@ -58,6 +66,17 @@ export default function PokeDex() {
         });
         setFilteredPokemonList(filteredList);
     }
+<<<<<<< HEAD
+    // handles search term/input
+    const handleInputChange = (e) => {
+        let searchTerm = e.target.value.toLowerCase().trim();
+        setPokemon(searchTerm);
+        if (!searchTerm) {
+            handleFilters('', activePokeRegion);
+            navigate('/');
+        } else {
+            handleFilters(searchTerm, activePokeRegion);
+=======
 
     const handleInputChange = (e) => {
         try {
@@ -71,10 +90,29 @@ export default function PokeDex() {
             }
         } catch (err) {
             console.error("ERROR: Error handling input change:", err);
+>>>>>>> main
         }
     };
-
+    // routes to the searched pokemon
     const handleSearch = async () => {
+<<<<<<< HEAD
+        if (!pokemon.trim()) {
+            handleFilters('', activePokeRegion);
+            navigate('/');
+            return null;
+        }
+        
+        const isPokeId = !isNaN(pokemon) && pokemon.trim() !== '';
+        let searchedPokemon;
+        if (isPokeId) {
+            const id = parseInt(pokemon);
+            // routes to pokemon based on the id that was searched
+            searchedPokemon = pokemonList.find((_pokemon, index) => (index + 1) === id)
+            
+        } else {
+            // routes to pokemon based on the term/name that was searched
+            searchedPokemon = pokemonList.find(p => p.name.toLowerCase() === pokemon.toLowerCase());
+=======
         try {
             if (!pokemon.trim()) {
                 handleFilters('', activePokeRegion);
@@ -94,8 +132,22 @@ export default function PokeDex() {
             navigate(page);
         } catch (err) {
             console.error("ERROR: Error handling search:", err);
+>>>>>>> main
         }
+        const page = searchedPokemon ? `/${searchedPokemon.name}` : '/404';
+        navigate(page);
     };
+<<<<<<< HEAD
+    // handles filter by region in the dropdown menu
+    const handleRegionChange = async (regionName) => {
+        const region = regions[regionName.toLowerCase()] || regions.all;
+        setActivePokeRegion(region);
+        handleFilters(pokemon, region);
+    };
+    // general function to route to a specific pokemon
+    const handlePokeCard = async (pokemon) => {
+        navigate(`/${pokemon}`);
+=======
     
     const handleRegionChange = async (regionName) => {
         try {
@@ -113,6 +165,7 @@ export default function PokeDex() {
         } catch (err) {
             console.error("ERROR: Error navigating to Pokémon details:", err);
         }
+>>>>>>> main
     };
 
     return (
@@ -126,7 +179,10 @@ export default function PokeDex() {
                 <Route path="/" element=
                     {
                         isLoading ? (
+<<<<<<< HEAD
+=======
                             // TODO: Change temporary loading screen to rotating Pokéball.
+>>>>>>> main
                             <p>Loading...</p>
                         ) : (
                             filteredPokemonList.length > 0 ? (
@@ -153,6 +209,10 @@ export default function PokeDex() {
                                                         <span className="pokemon-name">
                                                             {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
                                                         </span>
+<<<<<<< HEAD
+                                                        
+=======
+>>>>>>> main
                                                     </div>
                                                 );
                                             })
