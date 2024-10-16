@@ -65,7 +65,13 @@ header {
   h1 {
     margin: 0;
     padding: 10px 0;
+<<<<<<< HEAD
     color: #ffffff;
+=======
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+>>>>>>> main
   }
 
   .search-bar {
@@ -111,6 +117,7 @@ header {
       }
     }
   }
+<<<<<<< HEAD
 
   .filter-container{
     border-radius: 10px;
@@ -133,6 +140,32 @@ header {
     outline: none; /* Remove focus outline */
     box-shadow: none; /* Remove any focus box-shadow */
     border-color: #ffffff; 
+=======
+  
+  button {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .search-bar, .filter-dropdown {
+    display: flex;
+    align-items: center;
+  }
+
+  .filter-dropdown {
+    margin-left: 10px;
+    font-weight: 500;
+  }
+
+  .filter-dropdown p {
+    cursor: default;
+  }
+
+  .filter-dropdown select {
+    margin-left: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+>>>>>>> main
   }
 }
 
@@ -162,8 +195,17 @@ header {
   width: 15.85rem;
   height: 15.85rem;
   text-align: center;
+<<<<<<< HEAD
   text-decoration: none;
   cursor: pointer;
+=======
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.248);
+  cursor: pointer;
+
+  p {
+    margin: 0;
+  }
+>>>>>>> main
 
   img {
     max-width: 100%;
@@ -188,6 +230,7 @@ header {
   }
 }
 
+<<<<<<< HEAD
 .pokemon-card:hover{
   transition: 250ms;
   transform: translateY(-10px);
@@ -548,3 +591,63 @@ hr{
 .gender-ico{
   height: 40px;
 }
+=======
+.pokemon-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokemon-previous, .pokemon-next {
+  cursor: pointer;
+  user-select: none;
+}
+
+.pokemon-name {
+  padding: 0px 15px;
+}
+
+/* parang magmukhang pine-pet mo ung pokemon */
+img.pokemon-sprite {
+  cursor: grab;
+  user-select: none;
+}
+
+.pokemon-base-stats-name {
+  margin: 0;
+}
+
+.pokemon-evolution-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px 0;
+}
+
+.pokemon-evolution-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.pokemon-evolution-sprite {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pokemon-evolution-name {
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+.pokemon-evolution-arrow {
+  font-size: 25px;
+  margin: 0 10px;
+  cursor: default;
+}
+>>>>>>> main

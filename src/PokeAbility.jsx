@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 export default function PokeAbility({ abilities }) {
     return (
+<<<<<<< HEAD
         <div className="abilities-wrapper">
             <p className="caption-fonts">Abilities</p>
             <div className="ability-list">
@@ -16,6 +17,20 @@ export default function PokeAbility({ abilities }) {
                 ))}
             </div>
         </div>
+=======
+        <>
+            <div className="pokemon-ability">
+                <p>Abilities:</p>
+                {
+                    abilities.map(({name, desc}) => (
+                        <div key={name} className="pokemon-ability-item">
+                            <strong>{name}:</strong> {desc}
+                        </div>
+                    ))
+                }
+            </div>
+        </>
+>>>>>>> main
     );
 };
 
@@ -26,4 +41,8 @@ PokeAbility.propTypes = {
             desc: PropTypes.string.isRequired
         })
     ).isRequired
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> main
