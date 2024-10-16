@@ -1,9 +1,6 @@
 /**
  * Integrated in the dropdown menu to filter list of Pokémon by Pokémon region.
-<<<<<<< HEAD
  * Hisui region is discarded.
-=======
->>>>>>> main
 */
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -30,14 +27,8 @@ export default function Filters({ onRegionChange }) {
 
     return (
         <>
-<<<<<<< HEAD
             <div className='filter-container' >
                 <select className="filter-dropdown" onChange={(e) => onRegionChange(e.target.value)}>
-=======
-            <div className="filter-dropdown">
-                <p>Filter by Region: </p>
-                <select onChange={(e) => onRegionChange(e.target.value)}>
->>>>>>> main
                     <option title="All Regions">All Regions</option>
                     {
                         regions.map((region) => (
